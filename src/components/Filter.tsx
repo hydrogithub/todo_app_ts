@@ -1,17 +1,13 @@
-import Image from "next/image";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import Search from "../../public/search.svg";
 import { filtersReducer } from "../redux/FiltersSlice";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 
 const Filter = () => {
-  // const [searchTask, setSearchTask] = useState("");
   const dispatch = useDispatch();
 
   return (
-    // <div className="form__field search_group">
     <Formik
       initialValues={{
         search: "",
@@ -49,7 +45,6 @@ const Filter = () => {
         </Form>
       )}
     </Formik>
-    // </div>
   );
 };
 
