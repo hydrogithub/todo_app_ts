@@ -8,7 +8,7 @@ import Filter from "./Filter";
 import { todoReducer } from "../redux/TodoSlice";
 import { filtersReducer } from "../redux/FiltersSlice";
 
-import { Formik, ErrorMessage, Form } from "formik";
+import { Formik, Form } from "formik";
 import * as yup from "yup";
 
 const statusList = [
@@ -20,23 +20,10 @@ const statusList = [
 const Layout: React.FC = () => {
   // const [newTask, setNewTask] = useState("");
   const [filterStatus, setFilterStatus] = useState("ALL");
-  const [priority, setPriority] = useState("Medium");
+  // const [priority, setPriority] = useState("Medium");
   const dispatch = useDispatch();
 
   const todoList = useSelector(todoRemainingSelector);
-
-  // const handleSubmit = () => {
-  //   dispatch(
-  //     todoReducer.actions.addTodo({
-  //       id: uuidv4(),
-  //       name: newTask,
-  //       completed: false,
-  //       priority: priority,
-  //     })
-  //   );
-  //   setNewTask("");
-  //   setPriority("Medium");
-  // };
 
   const toggleTodo = (id: string) => {
     dispatch(todoReducer.actions.toggleTodoList(id));
@@ -44,6 +31,66 @@ const Layout: React.FC = () => {
   return (
     <div className="container">
       <div className="main">
+        <div className="top">
+          <h1>TODO APP DEMO</h1>
+          <div className="form__top">
+            <Filter />
+
+            <div className="form__field status_group">
+              <label>Lọc theo trạng thái</label>
+              <div className="status_content">
+                {statusList.map((item, index) => (
+                  <div className="status" key={index}>
+                    <input
+                      type="radio"
+                      name="status"
+                      id={item.name}
+                      value={item.name}
+                      checked={item.name === filterStatus}
+                      onChange={(e) => {
+                        setFilterStatus(e.target.value);
+                        dispatch(
+                          filtersReducer.actions.statusFilterChange(
+                            e.target.value
+                          )
+                        );
+                      }}
+                    />
+                    <label htmlFor={item.name}>{item.display}</label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="list__task">
+              {todoList.length === 0 ? (
+                <h3 className="text-center">Không có công việc nào !!!</h3>
+              ) : (
+                todoList.map((item: any) => (
+                  <div className="task" key={item.id}>
+                    <div className="content">
+                      <input
+                        type="checkbox"
+                        id={item.id}
+                        defaultChecked={item.completed}
+                        onClick={() => toggleTodo(item.id)}
+                      />
+                      <label
+                        className={item.completed ? "strike" : ""}
+                        htmlFor={item.id}
+                      >
+                        {item.name}
+                      </label>
+                    </div>
+                    <div className={"priority priority--" + item.priority}>
+                      {item.priority}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
         <Formik
           initialValues={{
             addTodo: "",
@@ -69,70 +116,6 @@ const Layout: React.FC = () => {
         >
           {(formik) => (
             <Form>
-              <div className="top">
-                <h1>TODO APP DEMO</h1>
-                <div className="form__top">
-                  <Filter />
-
-                  <div className="form__field status_group">
-                    <label>Lọc theo trạng thái</label>
-                    <div className="status_content">
-                      {statusList.map((item, index) => (
-                        <div className="status" key={index}>
-                          <input
-                            type="radio"
-                            name="status"
-                            id={item.name}
-                            value={item.name}
-                            checked={item.name === filterStatus}
-                            onChange={(e) => {
-                              setFilterStatus(e.target.value);
-                              dispatch(
-                                filtersReducer.actions.statusFilterChange(
-                                  e.target.value
-                                )
-                              );
-                            }}
-                          />
-                          <label htmlFor={item.name}>{item.display}</label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="list__task">
-                    {todoList.length === 0 ? (
-                      <h3 className="text-center">
-                        Không có công việc nào !!!
-                      </h3>
-                    ) : (
-                      todoList.map((item: any) => (
-                        <div className="task" key={item.id}>
-                          <div className="content">
-                            <input
-                              type="checkbox"
-                              id={item.id}
-                              defaultChecked={item.completed}
-                              onClick={() => toggleTodo(item.id)}
-                            />
-                            <label
-                              className={item.completed ? "strike" : ""}
-                              htmlFor={item.id}
-                            >
-                              {item.name}
-                            </label>
-                          </div>
-                          <div
-                            className={"priority priority--" + item.priority}
-                          >
-                            {item.priority}
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              </div>
               <div className="bottom">
                 <div className="form__field search_group">
                   <div className="search">
