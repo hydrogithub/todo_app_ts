@@ -102,7 +102,9 @@ const Layout: React.FC = () => {
 
                   <div className="list__task">
                     {todoList.length === 0 ? (
-                      <h3 className="text-center">Không có công việc nào</h3>
+                      <h3 className="text-center">
+                        Không có công việc nào !!!
+                      </h3>
                     ) : (
                       todoList.map((item: any) => (
                         <div className="task" key={item.id}>
