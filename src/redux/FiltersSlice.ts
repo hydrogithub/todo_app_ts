@@ -1,17 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Filters } from "interface";
 
-export const filtersReducer = createSlice({
-  name: "filters",
-  initialState: {
+const initialState: Filters = {
     search: "",
     status: "ALL",
-  },
-  reducers: {
-    searchFilterChange: (state, action) => {
-      state.search = action.payload;
+};
+
+export const filtersReducer = createSlice({
+    name: "filters",
+    initialState,
+    reducers: {
+        searchFilterChange: (state: Filters, action: PayloadAction<string>) => {
+            state.search = action.payload;
+        },
+        statusFilterChange: (state: Filters, action: PayloadAction<string>) => {
+            state.status = action.payload;
+        },
     },
-    statusFilterChange: (state, action) => {
-      state.status = action.payload;
-    },
-  },
 });

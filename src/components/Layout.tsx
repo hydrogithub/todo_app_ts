@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import { Formik, Form } from "formik";
+import * as yup from "yup";
+import { Todo } from "interface";
 import { todoRemainingSelector } from "../redux/selectors";
 import Filter from "./Filter";
 
 import { todoReducer } from "../redux/TodoSlice";
 import { filtersReducer } from "../redux/FiltersSlice";
-
-import { Formik, Form } from "formik";
-import * as yup from "yup";
 
 const statusList = [
     { name: "ALL", display: "Tất cả" },
@@ -17,7 +17,7 @@ const statusList = [
     { name: "Todo", display: "Chưa hoàn thành" },
 ];
 
-const Layout: React.FC = () => {
+function Layout(): ReactElement {
     const [filterStatus, setFilterStatus] = useState("ALL");
     const dispatch = useDispatch();
 
@@ -26,6 +26,7 @@ const Layout: React.FC = () => {
     const toggleTodo = (id: string) => {
         dispatch(todoReducer.actions.toggleTodoList(id));
     };
+
     return (
         <div className="container">
             <div className="main">
@@ -35,10 +36,10 @@ const Layout: React.FC = () => {
                         <Filter />
 
                         <div className="form__field status_group">
-                            <label>Lọc theo trạng thái</label>
+                            <div>Lọc theo trạng thái</div>
                             <div className="status_content">
-                                {statusList.map((item, index) => (
-                                    <div className="status" key={index}>
+                                {statusList.map(item => (
+                                    <div className="status" key={item.name}>
                                         <input
                                             type="radio"
                                             name="status"
@@ -68,7 +69,7 @@ const Layout: React.FC = () => {
                                     Không có công việc nào !!!
                                 </h3>
                             ) : (
-                                todoList.map((item: any) => (
+                                todoList.map((item: Todo) => (
                                     <div className="task" key={item.id}>
                                         <div className="content">
                                             <input
@@ -91,10 +92,7 @@ const Layout: React.FC = () => {
                                             </label>
                                         </div>
                                         <div
-                                            className={
-                                                "priority priority--" +
-                                                item.priority
-                                            }
+                                            className={`priority priority--${item.priority}`}
                                         >
                                             {item.priority}
                                         </div>
@@ -116,6 +114,8 @@ const Layout: React.FC = () => {
                             .required("Chưa nhập task"),
                     })}
                     onSubmit={({ addTodo, selectPriority }, actions) => {
+                        console.log(addTodo);
+
                         dispatch(
                             todoReducer.actions.addTodo({
                                 id: uuidv4(),
@@ -132,13 +132,11 @@ const Layout: React.FC = () => {
                             <div className="bottom">
                                 <div className="form__field search_group">
                                     <div className="search">
-                                        <label htmlFor="task">
-                                            Thêm công việc
-                                        </label>
+                                        <div>Thêm công việc</div>
                                         <input
                                             type="text"
                                             name="addTodo"
-                                            id="task"
+                                            id="addTodo"
                                             placeholder="Công việc muốn thêm..."
                                             value={formik.values.addTodo}
                                             onChange={formik.handleChange}
@@ -186,6 +184,6 @@ const Layout: React.FC = () => {
             </div>
         </div>
     );
-};
+}
 
 export default Layout;
